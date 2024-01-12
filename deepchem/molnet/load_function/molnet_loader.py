@@ -149,7 +149,6 @@ class _MolnetLoader(object):
             the datasets to disk, and subsequent calls will reload the cached datasets.
         """
         # Build the path to the dataset on disk.
-
         featurizer_name = str(self.featurizer)
         splitter_name = 'None' if self.splitter is None else str(self.splitter)
         save_folder = os.path.join(self.save_dir, name + "-featurized",
@@ -174,10 +173,8 @@ class _MolnetLoader(object):
                     return self.tasks, all_dataset, transformers
 
         # Create the dataset
-
         logger.info("About to featurize %s dataset." % name)
         dataset = self.create_dataset()
-
         # Split and transform the dataset.
 
         if self.splitter is None:

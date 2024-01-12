@@ -188,6 +188,7 @@ class ComplexFeaturizer(Featurizer):
             if idx % log_every_n == 0:
                 logger.info("Featurizing datapoint %i" % idx)
             try:
+                print(idx)
                 features.append(self._featurize(point, **kwargs))
                 successes.append(idx)
             except:
@@ -196,7 +197,8 @@ class ComplexFeaturizer(Featurizer):
                     idx)
                 features.append(np.zeros(1))
                 failures.append(idx)
-
+        print(successes)
+        print(failures)
         # Find a successful featurization
         try:
             i = np.argmax([f.shape[0] for f in features])

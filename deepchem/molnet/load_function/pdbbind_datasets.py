@@ -7,6 +7,7 @@ import pandas as pd
 
 import deepchem as dc
 from deepchem.molnet.load_function.molnet_loader import TransformerGenerator, _MolnetLoader
+from deepchem.utils.rdkit_utils import MoleculeLoadException, load_molecule, compute_ecfp_features, apply_pdbfixer
 from deepchem.data import Dataset
 from typing import List, Optional, Tuple, Union
 
@@ -37,7 +38,6 @@ class _PDBBindLoader(_MolnetLoader):
             raise ValueError(
                 "Only 'refined', 'general', and 'core' are supported for set_name."
             )
-
         filename = self.name + '.tar.gz'
         data_folder = os.path.join(self.data_dir, self.name)
         dataset_file = os.path.join(self.data_dir, filename)
@@ -53,10 +53,9 @@ class _PDBBindLoader(_MolnetLoader):
 
         # get pdb and sdf filenames, labels and pdbids
         protein_files, ligand_files, labels, pdbs = self._process_pdbs()
-
         # load and featurize each complex
         features = self.featurizer.featurize(
-            list(zip(ligand_files, protein_files)))
+            list(zip(ligand_files,protein_files)))
         dataset = dc.data.DiskDataset.from_numpy(features, y=labels, ids=pdbs)
 
         return dataset

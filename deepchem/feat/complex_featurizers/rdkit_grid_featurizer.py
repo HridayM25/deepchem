@@ -1,7 +1,7 @@
 import logging
 import time
 
-from deepchem.utils.rdkit_utils import MoleculeLoadException, load_molecule, compute_ecfp_features
+from deepchem.utils.rdkit_utils import MoleculeLoadException, load_molecule, compute_ecfp_features, apply_pdbfixer
 from deepchem.utils.geometry_utils import rotate_molecules, compute_pairwise_distances, compute_centroid, subtract_centroid
 from deepchem.utils.hash_utils import hash_ecfp, hash_ecfp_pair, hash_sybyl, vectorize
 from deepchem.utils.noncovalent_utils import compute_hydrogen_bonds, compute_salt_bridges, compute_binding_pocket_cation_pi
@@ -85,7 +85,7 @@ class RdkitGridFeaturizer(ComplexFeaturizer):
         cation_pi_dist_cutoff: 6.5
         cation_pi_angle_cutoff: 30.0
         """
-
+        
         # check if user tries to set removed arguments
         deprecated_args = [
             'box_x', 'box_y', 'box_z', 'save_intermediates',
@@ -412,6 +412,9 @@ class RdkitGridFeaturizer(ComplexFeaturizer):
             protein_xyz, protein_rdk = load_molecule(protein_pdb_file,
                                                      calc_charges=True,
                                                      sanitize=self.sanitize)
+            
+            # protein_rdk = apply_pdbfixer(protein_rdk)
+            # protein_xyz = apply_pdbfixer(protein_xyz)
             time2 = time.time()
             logger.info(
                 "TIMING: Loading protein coordinates took %0.3f s" %
@@ -420,6 +423,8 @@ class RdkitGridFeaturizer(ComplexFeaturizer):
             ligand_xyz, ligand_rdk = load_molecule(mol_pdb_file,
                                                    calc_charges=True,
                                                    sanitize=self.sanitize)
+            # ligand_rdk = apply_pdbfixer(ligand_rdk)
+            # ligand_xyz = apply_pdbfixer(ligand_xyz)
             time2 = time.time()
             logger.info(
                 "TIMING: Loading ligand coordinates took %0.3f s" %
